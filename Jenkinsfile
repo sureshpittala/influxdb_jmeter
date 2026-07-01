@@ -35,7 +35,7 @@ pipeline {
 
                 echo ==== RUNNING JMETER ====
 
-                "%JMETER_HOME%\\bin\\jmeter.bat" -n -t API.jmx -l logs/results.jtl -e -o html/report -Jjmeterengine.force.system.exit=true
+                "%JMETER_HOME%\\bin\\jmeter.bat" -n -t API_influx_grafana.jmx -l logs/results.jtl -e -o html/report -Jjmeterengine.force.system.exit=true
                 '''
             }
         }
