@@ -27,7 +27,8 @@ pipeline {
             steps {
                 bat '''
                 set PATH=%JAVA_HOME%\\bin;%PATH%
-                mkdir logs
+                if not exist logs mkdir logs
+                if not exist html mkdir html
 
                 echo ==== JAVA VERSION ====
                 java -version
