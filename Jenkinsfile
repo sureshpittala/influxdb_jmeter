@@ -34,7 +34,7 @@ pipeline {
   }
   post {
     always {
-      archieveArtifacts 'logs/results.jtl, html/report/**'
+      archiveArtifacts 'logs/results.jtl, html/report/**'
     }
   }
 }
