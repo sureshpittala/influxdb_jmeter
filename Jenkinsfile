@@ -20,7 +20,7 @@ pipeline {
     }
     stage('Java Check') {
       steps {
-        bat 'java -version'4
+        bat 'java -version'
       }
     }
     stage('Reports') {
