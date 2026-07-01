@@ -7,6 +7,8 @@ pipeline {
     stage('JMeter') {
       steps {
         bat '''
+        set JAVA_HOME=C:\\Coforge Software\\jdk-25_windows-x64_bin\\jdk-25.0.35
+        set PATH=%JAVA_HOME%\\bin;%PATH%
         if exist logs rmdir /s /q logs
         if exist html rmdir /s /q html
         mkdir logs
