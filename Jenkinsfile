@@ -18,6 +18,11 @@ pipeline {
         '''
       }
     }
+    stage('Java Check') {
+      steps {
+        bat 'java -version'4
+      }
+    }
     stage('Reports') {
       steps {
         perfReport sourceDataFiles: 'logs/results.jtl'
