@@ -8,18 +8,26 @@
       <boolProp name="TestPlan.serialize_threadgroups">false</boolProp>
     </TestPlan>
     <hashTree>
-      <ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="Users">
-        <intProp name="ThreadGroup.num_threads">100</intProp>
-        <intProp name="ThreadGroup.ramp_time">10</intProp>
-        <longProp name="ThreadGroup.duration">120</longProp>
-        <boolProp name="ThreadGroup.same_user_on_next_iteration">true</boolProp>
-        <boolProp name="ThreadGroup.scheduler">true</boolProp>
-        <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
-        <elementProp name="ThreadGroup.main_controller" elementType="LoopController" guiclass="LoopControlPanel" testclass="LoopController">
-          <intProp name="LoopController.loops">1</intProp>
-          <boolProp name="LoopController.continue_forever">false</boolProp>
-        </elementProp>
-      </ThreadGroup>
+<ThreadGroup guiclass="ThreadGroupGui" testclass="ThreadGroup" testname="Users">
+    <intProp name="ThreadGroup.num_threads">100</intProp>
+    <intProp name="ThreadGroup.ramp_time">10</intProp>
+
+    <boolProp name="ThreadGroup.scheduler">true</boolProp>
+    <longProp name="ThreadGroup.duration">120</longProp>
+
+    <boolProp name="ThreadGroup.same_user_on_next_iteration">true</boolProp>
+    <stringProp name="ThreadGroup.on_sample_error">continue</stringProp>
+
+    <elementProp name="ThreadGroup.main_controller"
+                 elementType="LoopController"
+                 guiclass="LoopControlPanel"
+                 testclass="LoopController">
+
+        <intProp name="LoopController.loops">-1</intProp>
+        <boolProp name="LoopController.continue_forever">true</boolProp>
+
+    </elementProp>
+</ThreadGroup>
       <hashTree>
         <HTTPSamplerProxy guiclass="HttpTestSampleGui" testclass="HTTPSamplerProxy" testname="GET Posts API" enabled="true">
           <stringProp name="HTTPSampler.domain">jsonplaceholder.typicode.com</stringProp>
