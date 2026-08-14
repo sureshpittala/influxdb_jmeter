@@ -27,6 +27,7 @@ pipeline {
             steps {
                 bat '''
                 set PATH=%JAVA_HOME%\\bin;%PATH%
+
                 if not exist logs mkdir logs
                 if not exist html mkdir html
 
@@ -36,6 +37,16 @@ pipeline {
                 echo ==== RUNNING JMETER ====
 
                 "%JMETER_HOME%\\bin\\jmeter.bat" -n -t API_influx_grafana.jmx -l logs/results.jtl -e -o html/report -Jjmeterengine.force.system.exit=true
+                '''
+            }
+        }
+
+        stage('AiPERF History') {
+            steps {
+                echo '=== AIPERF HISTORY STAGE STARTED ==='
+
+                bat '''
+                python C:\\practice\\AiPERF\\baselineintelligence\\execution_history_writer.py
                 '''
             }
         }
