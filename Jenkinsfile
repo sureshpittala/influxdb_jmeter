@@ -55,16 +55,15 @@ pipeline {
             }
         }
     }
-
-    post {
-        always {
-            archiveArtifacts artifacts: 'logs/results.jtl, html/report/**', fingerprint: true
-        }
-    }
     stage('AiPERF History') {
     steps {
         echo '=== AIPERF HISTORY STAGE STARTED ==='
         bat 'python execution_history_writer.py'
     }
-}
+  }
+    post {
+        always {
+            archiveArtifacts artifacts: 'logs/results.jtl, html/report/**', fingerprint: true
+        }
+    }
 }
