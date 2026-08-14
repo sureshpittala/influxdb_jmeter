@@ -42,14 +42,14 @@ pipeline {
         }
 
         stage('AiPERF History') {
-            steps {
-                echo '=== AIPERF HISTORY STAGE STARTED ==='
+    steps {
+        echo '=== AIPERF HISTORY STAGE STARTED ==='
 
-                bat '''
-                "C:\\Users\\Suresh.Pittala\\AppData\\Local\\Microsoft\\WindowsApps\\python.exe" C:\\practice\\AiPERF\\baselineintelligence\\execution_history_writer.py
-                '''
-            }
-        }
+        bat '''
+        "C:\\Users\\Suresh.Pittala\\AppData\\Local\\Programs\\Python\\Python312\\python.exe" C:\\practice\\AiPERF\\baselineintelligence\\execution_history_writer.py
+        '''
+    }
+}
 
         stage('Publish Reports') {
             steps {
