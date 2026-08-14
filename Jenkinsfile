@@ -46,6 +46,9 @@ pipeline {
         echo '=== AIPERF HISTORY STAGE STARTED ==='
 
         bat '''
+        echo Build Number: %BUILD_NUMBER%
+        echo Job Name: %JOB_NAME%
+        
         "C:\\Users\\Suresh.Pittala\\AppData\\Local\\Programs\\Python\\Python312\\python.exe" C:\\practice\\AiPERF\\baselineintelligence\\execution_history_writer.py
         '''
     }
