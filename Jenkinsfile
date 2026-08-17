@@ -46,10 +46,20 @@ pipeline {
         echo '=== AIPERF HISTORY STAGE STARTED ==='
 
         bat '''
+        echo =====================================
         echo Build Number: %BUILD_NUMBER%
         echo Job Name: %JOB_NAME%
-        
-        "C:\\Users\\Suresh.Pittala\\AppData\\Local\\Programs\\Python\\Python312\\python.exe" C:\\practice\\AiPERF\\baselineintelligence\\execution_history_writer.py
+        echo =====================================
+
+        cd C:\\practice\\AiPERF\\baselineintelligence
+
+        echo Running Execution History Writer...
+        "C:\\Users\\Suresh.Pittala\\AppData\\Local\\Programs\\Python\\Python312\\python.exe" execution_history_writer.py
+
+        echo Running Actuator Metrics Collector...
+        "C:\\Users\\Suresh.Pittala\\AppData\\Local\\Programs\\Python\\Python312\\python.exe" actuator_metrics_collector.py
+
+        echo AiPERF History Processing Completed
         '''
     }
 }
