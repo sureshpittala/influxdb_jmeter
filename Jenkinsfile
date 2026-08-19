@@ -38,8 +38,8 @@ pipeline {
             echo ==== RUNNING JMETER ====
 
             call "%JMETER_HOME%\\bin\\jmeter.bat" -n -t API_influx_grafana.jmx -l logs/results.jtl -e -o html/report -Jjmeterengine.force.system.exit=true
-            '''
             echo JMeter Execution Completed
+            '''            
         }
     }
 }
