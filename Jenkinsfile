@@ -42,22 +42,29 @@ pipeline {
         }
 
         stage('AiPERF History') {
+
     steps {
-        echo '=== AIPERF HISTORY STAGE STARTED ==='
+
+        script {
+            env.RUN_ID = "RUN_${BUILD_NUMBER}_${new Date().format('yyyyMMdd_HHmmss')}"
+        }
+
+        echo "RUN_ID=${env.RUN_ID}"
 
         bat '''
         echo =====================================
         echo Build Number: %BUILD_NUMBER%
         echo Job Name: %JOB_NAME%
+        echo Run ID: %RUN_ID%
         echo =====================================
 
         cd C:\\practice\\AiPERF\\baselineintelligence
 
-        echo Running Execution History Writer...
-        "C:\\Users\\Suresh.Pittala\\AppData\\Local\\Programs\\Python\\Python312\\python.exe" execution_history_writer.py
-
         echo Running Actuator Metrics Collector...
         "C:\\Users\\Suresh.Pittala\\AppData\\Local\\Programs\\Python\\Python312\\python.exe" actuator_metrics_collector.py
+
+        echo Running Execution History Writer...
+        "C:\\Users\\Suresh.Pittala\\AppData\\Local\\Programs\\Python\\Python312\\python.exe" execution_history_writer.py
 
         echo AiPERF History Processing Completed
         '''
