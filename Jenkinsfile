@@ -24,22 +24,25 @@ pipeline {
         }
 
         stage('JMeter Execution') {
-            steps {
-                bat '''
-                set PATH=%JAVA_HOME%\\bin;%PATH%
+    steps {
+        timeout(time: 10, unit: 'MINUTES') {
+            bat '''
+            set PATH=%JAVA_HOME%\\bin;%PATH%
 
-                if not exist logs mkdir logs
-                if not exist html mkdir html
+            if not exist logs mkdir logs
+            if not exist html mkdir html
 
-                echo ==== JAVA VERSION ====
-                java -version
+            echo ==== JAVA VERSION ====
+            java -version
 
-                echo ==== RUNNING JMETER ====
+            echo ==== RUNNING JMETER ====
 
-                "%JMETER_HOME%\\bin\\jmeter.bat" -n -t API_influx_grafana.jmx -l logs/results.jtl -e -o html/report -Jjmeterengine.force.system.exit=true
-                '''
-            }
+            call "%JMETER_HOME%\\bin\\jmeter.bat" -n -t API_influx_grafana.jmx -l logs/results.jtl -e -o html/report -Jjmeterengine.force.system.exit=true
+            '''
+            echo JMeter Execution Completed
         }
+    }
+}
 
         stage('AiPERF History') {
 
@@ -58,7 +61,7 @@ pipeline {
         echo Run ID: %RUN_ID%
         echo =====================================
 
-        cd C:\\practice\\AiPERF\\baselineintelligence
+        cd /d C:\\practice\\AiPERF\\baselineintelligence
 
         echo Running Actuator Metrics Collector...
         "C:\\Users\\Suresh.Pittala\\AppData\\Local\\Programs\\Python\\Python312\\python.exe" actuator_metrics_collector.py
@@ -69,21 +72,14 @@ pipeline {
         echo Running Similar Execution Intelligence...
         "C:\\Users\\Suresh.Pittala\\AppData\\Local\\Programs\\Python\\Python312\\python.exe" similar_execution.py
 
+        if errorlevel 1 (
+            echo WARNING: Similar Execution Intelligence Failed
+        )
+        echo Similar Execution Intelligence Completed
         echo AiPERF History Processing Completed
         '''
     }
 }
-        stage('JMeter Timeout') {
-    options {
-        timeout(time: 5, unit: 'MINUTES')
-    }
-    steps {
-        bat '''
-        ...
-        '''
-    }
-}
-
         stage('Publish Reports') {
             steps {
                 perfReport sourceDataFiles: 'logs/results.jtl'
