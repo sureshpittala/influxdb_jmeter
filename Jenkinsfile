@@ -66,6 +66,9 @@ pipeline {
         echo Running Execution History Writer...
         "C:\\Users\\Suresh.Pittala\\AppData\\Local\\Programs\\Python\\Python312\\python.exe" execution_history_writer.py
 
+        echo Running Similar Execution Intelligence...
+        "C:\\Users\\Suresh.Pittala\\AppData\\Local\\Programs\\Python\\Python312\\python.exe" similar_execution.py
+
         echo AiPERF History Processing Completed
         '''
     }
