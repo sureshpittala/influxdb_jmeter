@@ -73,6 +73,16 @@ pipeline {
         '''
     }
 }
+        stage('JMeter Execution') {
+    options {
+        timeout(time: 10, unit: 'MINUTES')
+    }
+    steps {
+        bat '''
+        ...
+        '''
+    }
+}
 
         stage('Publish Reports') {
             steps {
