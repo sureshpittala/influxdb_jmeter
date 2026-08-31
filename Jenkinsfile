@@ -84,12 +84,27 @@ pipeline {
 
         echo Running Transaction Comparison Matrix...
         "C:\\Users\\Suresh.Pittala\\AppData\\Local\\Programs\\Python\\Python312\\python.exe" transaction_comparison_matrix.py
+        
+        if errorlevel 1 (
+            echo ERROR: Transaction Comparison Matrix Engine Failed
+            exit /b 1
+        )
 
         echo Running Variance Ranking...
         "C:\\Users\\Suresh.Pittala\\AppData\\Local\\Programs\\Python\\Python312\\python.exe" ai_variance_ranking.py
 
+        if errorlevel 1 (
+            echo ERROR: Variance Ranking Engine Failed
+            exit /b 1
+        )
+
         echo Running Executive Summary...
         "C:\\Users\\Suresh.Pittala\\AppData\\Local\\Programs\\Python\\Python312\\python.exe" ai_executive_summary.py
+
+        if errorlevel 1 (
+            echo ERROR: Executive Summary Engine Failed
+            exit /b 1
+        )
         
         echo Transaction History Writer Completed
         echo AiPERF History Processing Completed
