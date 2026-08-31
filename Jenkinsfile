@@ -75,7 +75,7 @@ pipeline {
         )
 
         echo Running Comparison Engine...
-        "C:\Users\Suresh.Pittala\AppData\Local\Programs\Python\Python312\python.exe" transaction_comparison_report.py
+        "C:\\Users\\Suresh.Pittala\\AppData\\Local\\Programs\\Python\\Python312\\python.exe" transaction_comparison_report.py
 
         if errorlevel 1 (
             echo ERROR: Comparison Engine Failed
