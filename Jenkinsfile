@@ -81,9 +81,18 @@ pipeline {
             echo ERROR: Comparison Engine Failed
             exit /b 1
         )
+
+        echo Running Variance Ranking...
+        "C:\\Users\\Suresh.Pittala\\AppData\\Local\\Programs\\Python\\Python312\\python.exe" ai_variance_ranking.py
+
+        echo Running Executive Summary...
+        "C:\\Users\\Suresh.Pittala\\AppData\\Local\\Programs\\Python\\Python312\\python.exe" ai_variance_ranking.py
+        
         echo Transaction History Writer Completed
         echo AiPERF History Processing Completed
         echo AiPERF Transaction Comparison Completed
+        echo AiPERF Variance Ranking Completed
+        echo AiPERF Running Executive Summary Completed
         '''
     }
 }
