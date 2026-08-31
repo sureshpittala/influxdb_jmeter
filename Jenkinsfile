@@ -86,7 +86,7 @@ pipeline {
         "C:\\Users\\Suresh.Pittala\\AppData\\Local\\Programs\\Python\\Python312\\python.exe" ai_variance_ranking.py
 
         echo Running Executive Summary...
-        "C:\\Users\\Suresh.Pittala\\AppData\\Local\\Programs\\Python\\Python312\\python.exe" ai_variance_ranking.py
+        "C:\\Users\\Suresh.Pittala\\AppData\\Local\\Programs\\Python\\Python312\\python.exe" ai_executive_summary.py
         
         echo Transaction History Writer Completed
         echo AiPERF History Processing Completed
