@@ -66,16 +66,15 @@ pipeline {
         echo Running Actuator Metrics Collector...
         "C:\\Users\\Suresh.Pittala\\AppData\\Local\\Programs\\Python\\Python312\\python.exe" actuator_metrics_collector.py
 
-        echo Running Execution History Writer...
-        "C:\\Users\\Suresh.Pittala\\AppData\\Local\\Programs\\Python\\Python312\\python.exe" execution_history_writer.py
-
-        echo Running Similar Execution Intelligence...
-        "C:\\Users\\Suresh.Pittala\\AppData\\Local\\Programs\\Python\\Python312\\python.exe" similar_execution.py
+        echo Running Transaction History Writer...
+        "C:\\Users\\Suresh.Pittala\\AppData\\Local\\Programs\\Python\\Python312\\python.exe" transaction_history_writer.py %RUN_ID%
 
         if errorlevel 1 (
-            echo WARNING: Similar Execution Intelligence Failed
+            echo ERROR: Transaction History Writer Failed
+            exit /b 1
         )
-        echo Similar Execution Intelligence Completed
+
+        echo Transaction History Writer Completed
         echo AiPERF History Processing Completed
         '''
     }
