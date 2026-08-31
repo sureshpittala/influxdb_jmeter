@@ -74,8 +74,16 @@ pipeline {
             exit /b 1
         )
 
+        echo Running Comparison Engine...
+        "C:\Users\Suresh.Pittala\AppData\Local\Programs\Python\Python312\python.exe" transaction_comparison_report.py
+
+        if errorlevel 1 (
+            echo ERROR: Comparison Engine Failed
+            exit /b 1
+        )
         echo Transaction History Writer Completed
         echo AiPERF History Processing Completed
+        echo AiPERF Transaction Comparison Completed
         '''
     }
 }
