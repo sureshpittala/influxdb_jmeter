@@ -71,14 +71,6 @@ pipeline {
             exit /b 1
         )
 
-        echo Running Service Comparison Writer...
-        "C:\\Users\\Suresh.Pittala\\AppData\\Local\\Programs\\Python\\Python312\\python.exe" service_comparison_writer.py
-
-        if errorlevel 1 (
-            echo ERROR: Service Comparison Writer Failed
-            exit /b 1
-        )
-
         echo Running Transaction History Writer...
         "C:\\Users\\Suresh.Pittala\\AppData\\Local\\Programs\\Python\\Python312\\python.exe" transaction_history_writer.py %RUN_ID%
 
@@ -100,6 +92,14 @@ pipeline {
         
         if errorlevel 1 (
             echo ERROR: Transaction Comparison Matrix Engine Failed
+            exit /b 1
+        )
+
+        echo Running Service Comparison Writer...
+        "C:\\Users\\Suresh.Pittala\\AppData\\Local\\Programs\\Python\\Python312\\python.exe" service_comparison_writer.py
+
+        if errorlevel 1 (
+            echo ERROR: Service Comparison Writer Failed
             exit /b 1
         )
 
