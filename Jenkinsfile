@@ -115,7 +115,15 @@ pipeline {
         "C:\\Users\\Suresh.Pittala\\AppData\\Local\\Programs\\Python\\Python312\\python.exe" ai_rca_engine.py
 
         if errorlevel 1 (
-            echo ERROR: Running RCA Engine Failed
+            echo ERROR: RCA Engine Failed
+            exit /b 1
+        )
+
+        echo Running Ai Release Advisor Engine...
+        "C:\\Users\\Suresh.Pittala\\AppData\\Local\\Programs\\Python\\Python312\\python.exe" ai_release_advisor.py
+
+        if errorlevel 1 (
+            echo ERROR: Ai Release Advisor Failed
             exit /b 1
         )
 
