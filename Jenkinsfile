@@ -118,19 +118,7 @@ pipeline {
             echo ERROR: RCA Engine Failed
             exit /b 1
         )
-
-        echo API_URL=%API_URL%
-        
-        if "%API_URL%"=="" (
-            echo ERROR: API_URL not set
-            exit /b 1
-        )
-        
-        if "%API_KEY%"=="" (
-            echo ERROR: API_KEY not set
-            exit /b 1
-        )
-        
+     
         echo Running Ai Release Advisor Engine...
         "C:\\Users\\Suresh.Pittala\\AppData\\Local\\Programs\\Python\\Python312\\python.exe" ai_release_advisor.py
 
