@@ -143,6 +143,7 @@ pipeline {
         echo AiPERF Transaction Comparison Matrix Completed
         echo AiPERF Variance Ranking Completed
         echo AiPERF RCA Engine Completed
+        echo AiPERF Ai Release Advisor Completed
         echo AiPERF Executive Summary Completed
         '''
     }
