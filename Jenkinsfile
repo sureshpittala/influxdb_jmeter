@@ -111,6 +111,14 @@ pipeline {
             exit /b 1
         )
 
+        echo Running RCA Engine...
+        "C:\\Users\\Suresh.Pittala\\AppData\\Local\\Programs\\Python\\Python312\\python.exe" ai_rca_engine.py
+
+        if errorlevel 1 (
+            echo ERROR: Running RCA Engine Failed
+            exit /b 1
+        )
+
         echo Running Executive Summary...
         "C:\\Users\\Suresh.Pittala\\AppData\\Local\\Programs\\Python\\Python312\\python.exe" ai_executive_summary.py
 
@@ -126,7 +134,8 @@ pipeline {
         echo AiPERF Transaction Comparison Report Completed
         echo AiPERF Transaction Comparison Matrix Completed
         echo AiPERF Variance Ranking Completed
-        echo AiPERF Running Executive Summary Completed
+        echo AiPERF RCA Engine Completed
+        echo AiPERF Executive Summary Completed
         '''
     }
 }
