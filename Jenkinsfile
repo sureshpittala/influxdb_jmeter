@@ -66,6 +66,19 @@ pipeline {
         echo Running Actuator Metrics Collector...
         "C:\\Users\\Suresh.Pittala\\AppData\\Local\\Programs\\Python\\Python312\\python.exe" actuator_metrics_collector.py
 
+        if errorlevel 1 (
+            echo ERROR: Actuator Metrics Collector Failed
+            exit /b 1
+        )
+
+        echo Running Service Comparison Writer...
+        "C:\\Users\\Suresh.Pittala\\AppData\\Local\\Programs\\Python\\Python312\\python.exe" service_comparison_writer.py
+
+        if errorlevel 1 (
+            echo ERROR: Service Comparison Writer Failed
+            exit /b 1
+        )
+
         echo Running Transaction History Writer...
         "C:\\Users\\Suresh.Pittala\\AppData\\Local\\Programs\\Python\\Python312\\python.exe" transaction_history_writer.py %RUN_ID%
 
@@ -106,6 +119,8 @@ pipeline {
             exit /b 1
         )
         
+        echo Actuator Metrics Collector Completed
+        echo Service Comparison Writer Completed
         echo Transaction History Writer Completed
         echo AiPERF History Processing Completed
         echo AiPERF Transaction Comparison Report Completed
