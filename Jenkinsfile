@@ -178,17 +178,13 @@ pipeline {
                     alwaysLinkToLastBuild: true,
                     allowMissing: false
                 ])
+                archiveArtifacts(
+                    artifacts: 'logs/results.jtl,html/report/**',
+                    fingerprint: true,
+                    allowEmptyArchive: true
+                )
             }
         }
     }
 
-    post {
-        always {
-            archiveArtifacts(
-                artifacts: 'logs/results.jtl,html/report/**',
-                fingerprint: true,
-                allowEmptyArchive: false
-            )
-        }
-    }
 }
