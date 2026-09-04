@@ -4,10 +4,11 @@ pipeline {
     environment {
         JAVA_HOME = 'C:\\Program Files\\Eclipse Adoptium\\jdk-17.0.19.10-hotspot'
         JMETER_HOME = 'C:\\jmeter\\apache-jmeter-5.6.3'
+        PYTHON = 'C:\\Users\\Suresh.Pittala\\AppData\\Local\\Programs\\Python\\Python312\\python.exe'
+        INTELLIGENCE_DIR = 'C:\\practice\\AiPERF\\baselineintelligence'
     }
 
     stages {
-
         stage('Checkout') {
             steps {
                 checkout scm
@@ -19,148 +20,119 @@ pipeline {
                 bat '''
                 if exist logs rmdir /s /q logs
                 if exist html rmdir /s /q html
+                if exist baselineintelligence\\__pycache__ rmdir /s /q baselineintelligence\\__pycache__
+                mkdir logs
+                mkdir html
                 '''
             }
         }
 
+        stage('Generate Run ID') {
+            steps {
+                script {
+                    env.RUN_ID = "RUN_${env.BUILD_NUMBER}_${new Date().format('yyyyMMdd_HHmmss')}"
+                }
+                echo "RUN_ID=${env.RUN_ID}"
+            }
+        }
+
         stage('JMeter Execution') {
-    steps {
-        timeout(time: 10, unit: 'MINUTES') {
-            bat '''
-            set PATH=%JAVA_HOME%\\bin;%PATH%
-
-            if not exist logs mkdir logs
-            if not exist html mkdir html
-
-            echo ==== JAVA VERSION ====
-            java -version
-
-            echo ==== RUNNING JMETER ====
-
-            call "%JMETER_HOME%\\bin\\jmeter.bat" -n -t API_influx_grafana.jmx -l logs/results.jtl -e -o html/report -Jjmeterengine.force.system.exit=true
-            echo JMeter Execution Completed
-            '''            
-        }
-    }
-}
-
-        stage('AiPERF History') {
-
-    steps {
-
-        script {
-            env.RUN_ID = "RUN_${BUILD_NUMBER}_${new Date().format('yyyyMMdd_HHmmss')}"
+            steps {
+                timeout(time: 10, unit: 'MINUTES') {
+                    bat '''
+                    set "PATH=%JAVA_HOME%\\bin;%PATH%"
+                    echo ==== JAVA VERSION ====
+                    java -version
+                    echo ==== RUNNING JMETER ====
+                    call "%JMETER_HOME%\\bin\\jmeter.bat" -n -t API_influx_grafana.jmx -l logs\\results.jtl -e -o html\\report -Jjmeterengine.force.system.exit=true
+                    '''
+                }
+            }
         }
 
-        echo "RUN_ID=${env.RUN_ID}"
+        stage('Collect Execution Data') {
+            steps {
+                bat '''
+                cd /d "%INTELLIGENCE_DIR%"
+                "%PYTHON%" actuator_metrics_collector.py
+                if errorlevel 1 exit /b 1
 
-        bat '''
-        echo =====================================
-        echo Build Number: %BUILD_NUMBER%
-        echo Job Name: %JOB_NAME%
-        echo Run ID: %RUN_ID%
-        echo =====================================
+                "%PYTHON%" transaction_history_writer.py
+                if errorlevel 1 exit /b 1
 
-        cd /d C:\\practice\\AiPERF\\baselineintelligence
+                "%PYTHON%" execution_history_writer.py
+                if errorlevel 1 exit /b 1
+                '''
+            }
+        }
 
-        echo Running Actuator Metrics Collector...
-        "C:\\Users\\Suresh.Pittala\\AppData\\Local\\Programs\\Python\\Python312\\python.exe" actuator_metrics_collector.py
+        stage('Build Comparisons') {
+            steps {
+                bat '''
+                cd /d "%INTELLIGENCE_DIR%"
+                "%PYTHON%" baseline_compare.py
+                if errorlevel 1 exit /b 1
 
-        if errorlevel 1 (
-            echo ERROR: Actuator Metrics Collector Failed
-            exit /b 1
-        )
+                "%PYTHON%" transaction_comparison_report.py
+                if errorlevel 1 exit /b 1
 
-        echo Running Transaction History Writer...
-        "C:\\Users\\Suresh.Pittala\\AppData\\Local\\Programs\\Python\\Python312\\python.exe" transaction_history_writer.py %RUN_ID%
+                "%PYTHON%" service_comparison_writer.py
+                if errorlevel 1 exit /b 1
 
-        if errorlevel 1 (
-            echo ERROR: Transaction History Writer Failed
-            exit /b 1
-        )
+                "%PYTHON%" transaction_comparison_matrix.py
+                if errorlevel 1 exit /b 1
 
-        echo Running Comparison Engine...
-        "C:\\Users\\Suresh.Pittala\\AppData\\Local\\Programs\\Python\\Python312\\python.exe" transaction_comparison_report.py
+                "%PYTHON%" ai_variance_ranking.py
+                if errorlevel 1 exit /b 1
+                '''
+            }
+        }
 
-        if errorlevel 1 (
-            echo ERROR: Comparison Engine Failed
-            exit /b 1
-        )
+        stage('Run Intelligence Engines') {
+            steps {
+                bat '''
+                cd /d "%INTELLIGENCE_DIR%"
+                "%PYTHON%" similar_execution.py
+                if errorlevel 1 exit /b 1
 
-        echo Running Service Comparison Writer...
-        "C:\\Users\\Suresh.Pittala\\AppData\\Local\\Programs\\Python\\Python312\\python.exe" service_comparison_writer.py
+                "%PYTHON%" readiness_score.py --build-id "%RUN_ID%"
+                if errorlevel 1 exit /b 1
 
-        if errorlevel 1 (
-            echo ERROR: Service Comparison Writer Failed
-            exit /b 1
-        )
+                "%PYTHON%" anomaly_detection.py
+                if errorlevel 1 exit /b 1
 
-        echo Running Transaction Comparison Matrix...
-        "C:\\Users\\Suresh.Pittala\\AppData\\Local\\Programs\\Python\\Python312\\python.exe" transaction_comparison_matrix.py
-        
-        if errorlevel 1 (
-            echo ERROR: Transaction Comparison Matrix Engine Failed
-            exit /b 1
-        )
+                "%PYTHON%" ai_rca_engine.py
+                if errorlevel 1 exit /b 1
+                '''
+            }
+        }
 
-        echo Running Variance Ranking...
-        "C:\\Users\\Suresh.Pittala\\AppData\\Local\\Programs\\Python\\Python312\\python.exe" ai_variance_ranking.py
+        stage('Build Findings and Knowledge Layer') {
+            steps {
+                bat '''
+                cd /d "%INTELLIGENCE_DIR%"
+                "%PYTHON%" aiperf_findings_package.py
+                if errorlevel 1 exit /b 1
+                '''
+            }
+        }
 
-        if errorlevel 1 (
-            echo ERROR: Variance Ranking Engine Failed
-            exit /b 1
-        )
+        stage('Generate AI Reports') {
+            steps {
+                bat '''
+                cd /d "%INTELLIGENCE_DIR%"
+                "%PYTHON%" ai_release_advisor.py
+                if errorlevel 1 exit /b 1
 
-        echo Running RCA Engine...
-        "C:\\Users\\Suresh.Pittala\\AppData\\Local\\Programs\\Python\\Python312\\python.exe" ai_rca_engine.py
+                "%PYTHON%" ai_executive_summary.py
+                if errorlevel 1 exit /b 1
+                '''
+            }
+        }
 
-        if errorlevel 1 (
-            echo ERROR: RCA Engine Failed
-            exit /b 1
-        )
-
-        echo Running AiPERF Findings Package...
-        "C:\\Users\\Suresh.Pittala\\AppData\\Local\\Programs\\Python\\Python312\\python.exe" aiperf_findings_package.py
-
-        if errorlevel 1 (
-           echo ERROR: Findings Package Failed
-           exit /b 1
-        )
-     
-        echo Running Ai Release Advisor Engine...
-        "C:\\Users\\Suresh.Pittala\\AppData\\Local\\Programs\\Python\\Python312\\python.exe" ai_release_advisor.py
-
-        if errorlevel 1 (
-            echo ERROR: Ai Release Advisor Failed
-            exit /b 1
-        )
-
-        echo Running Executive Summary...
-        "C:\\Users\\Suresh.Pittala\\AppData\\Local\\Programs\\Python\\Python312\\python.exe" ai_executive_summary.py
-
-        if errorlevel 1 (
-            echo ERROR: Executive Summary Engine Failed
-            exit /b 1
-        )
-        
-        echo Actuator Metrics Collector Completed
-        echo Service Comparison Writer Completed
-        echo Transaction History Writer Completed
-        echo AiPERF History Processing Completed
-        echo AiPERF Transaction Comparison Report Completed
-        echo AiPERF Transaction Comparison Matrix Completed
-        echo AiPERF Variance Ranking Completed
-        echo AiPERF RCA Engine Completed
-        echo AiPERF FINDINGS PACKAGE Engine Completed
-        echo AiPERF Ai Release Advisor Completed
-        echo AiPERF Executive Summary Completed
-        '''
-    }
-}
         stage('Publish Reports') {
             steps {
                 perfReport sourceDataFiles: 'logs/results.jtl'
-
                 publishHTML(target: [
                     reportDir: 'html/report',
                     reportFiles: 'index.html',
@@ -175,7 +147,11 @@ pipeline {
 
     post {
         always {
-            archiveArtifacts artifacts: 'logs/results.jtl, html/report/**', fingerprint: true
+            archiveArtifacts(
+                artifacts: 'logs/results.jtl,html/report/**',
+                fingerprint: true,
+                allowEmptyArchive: false
+            )
         }
     }
 }
