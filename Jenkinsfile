@@ -118,6 +118,14 @@ pipeline {
             echo ERROR: RCA Engine Failed
             exit /b 1
         )
+
+        echo Running AiPERF Findings Package...
+        "C:\\Users\\Suresh.Pittala\\AppData\\Local\\Programs\\Python\\Python312\\python.exe" aiperf_findings_package.py
+
+        if errorlevel 1 (
+           echo ERROR: Findings Package Failed
+           exit /b 1
+        )
      
         echo Running Ai Release Advisor Engine...
         "C:\\Users\\Suresh.Pittala\\AppData\\Local\\Programs\\Python\\Python312\\python.exe" ai_release_advisor.py
@@ -143,6 +151,7 @@ pipeline {
         echo AiPERF Transaction Comparison Matrix Completed
         echo AiPERF Variance Ranking Completed
         echo AiPERF RCA Engine Completed
+        echo AiPERF FINDINGS PACKAGE Engine Completed
         echo AiPERF Ai Release Advisor Completed
         echo AiPERF Executive Summary Completed
         '''
